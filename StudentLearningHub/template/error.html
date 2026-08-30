@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ title }} - Student Learning Hub</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="topbar">
+        <div class="brand-wrap">
+            <div class="brand-mark">🎓</div>
+            <div class="brand-text">Student Learning Hub</div>
+        </div>
+
+        <nav class="main-nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('resources') }}">Resources</a>
+            <a href="{{ url_for('categories') }}">Categories</a>
+            {% if user %}
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+            {% endif %}
+        </nav>
+
+        <div class="nav-actions">
+            {% if user %}
+            <a href="{{ url_for('upload') }}" class="button small-button">Upload</a>
+            {% else %}
+            <a href="{{ url_for('auth') }}" class="button small-button">Login</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="content-shell">
+
+        <section class="error-panel">
+            <p class="error-code">{{ code }}</p>
+            <h1>{{ title }}</h1>
+            <p>{{ message }}</p>
+            <a href="{{ url_for('index') }}" class="button">Back to Home</a>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="brand-mark">🎓</div>
+                <div>
+                    <h3>Student Learning Hub</h3>
+                    <p>Learn, Share, Grow Together.</p>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
+                    <li><a href="{{ url_for('categories') }}">Categories</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li>Practical Programs</li>
+                    <li>Project Source Code</li>
+                    <li>Seminar PPTs</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-row">
+                    <span>f</span>
+                    <span>in</span>
+                    <span>x</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2025 Student Learning Hub. All rights reserved.</div>
+    </footer>
+
+</body>
+
+</html>

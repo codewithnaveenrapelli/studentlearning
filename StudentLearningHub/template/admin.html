@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - Student Learning Hub</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="topbar">
+        <div class="brand-wrap">
+            <div class="brand-mark">🎓</div>
+            <div class="brand-text">Student Learning Hub</div>
+        </div>
+
+        <nav class="main-nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('resources') }}">Resources</a>
+            <a href="{{ url_for('categories') }}">Categories</a>
+            <a href="{{ url_for('admin') }}">Admin</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+
+        <div class="nav-actions">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" placeholder="Search resources..." aria-label="Search resources">
+            </div>
+        </div>
+    </header>
+
+    {% with flashed_messages = get_flashed_messages(with_categories=true) %}
+    {% if flashed_messages %}
+    <div class="flash-messages">
+        {% for category, message in flashed_messages %}
+        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+
+    <main class="content-shell">
+
+        <!-- Welcome -->
+        <section class="admin-welcome">
+
+            <div>
+
+                <p class="small-text">
+                    Admin Panel
+                </p>
+
+                <h1>Welcome, Admin!</h1>
+
+                <p>
+                    Manage students, resources, and categories
+                    from one place.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Statistics -->
+        <section>
+
+            <h2>Portal Overview</h2>
+
+            <div class="admin-stats">
+
+                <div class="admin-stat">
+                    <strong>{{ users|length }}</strong>
+                    <span>Total Students</span>
+                </div>
+
+                <div class="admin-stat">
+                    <strong>{{ total_resource_count }}</strong>
+                    <span>Total Resources</span>
+                </div>
+
+                <div class="admin-stat">
+                    <strong>{{ categories|length }}</strong>
+                    <span>Total Categories</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Resource Management -->
+        <section>
+
+            <div class="section-heading">
+
+                <h2>Manage Resources</h2>
+
+                <p>
+                    View and remove duplicate or inappropriate
+                    resources.
+                </p>
+
+            </div>
+
+
+            <div class="admin-resource-list">
+
+                {% for item in resources_list %}
+                <article class="admin-resource">
+
+                    <div>
+
+                        <span class="resource-category">
+                            {{ item.category.name }}
+                        </span>
+
+                        <h3>{{ item.title }}</h3>
+
+                        <p>
+                            Uploaded by: {{ item.user.name }}
+                        </p>
+
+                    </div>
+
+                    <div class="admin-actions">
+
+                        <a href="{{ url_for('resource', resource_id=item.id) }}" class="button">
+                            View
+                        </a>
+
+                        <form method="post" action="{{ url_for('delete_resource', resource_id=item.id) }}"
+                              onsubmit="return confirm('Delete this resource?');" style="display:inline;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="delete-button">
+                                Delete
+                            </button>
+                        </form>
+
+                    </div>
+
+                </article>
+                {% else %}
+                <p>No resources uploaded yet.</p>
+                {% endfor %}
+
+            </div>
+
+            {% if total_pages > 1 %}
+            <nav class="pagination">
+                {% if page > 1 %}
+                <a href="{{ url_for('admin', page=page - 1) }}">&laquo; Prev</a>
+                {% else %}
+                <span class="disabled">&laquo; Prev</span>
+                {% endif %}
+
+                <span class="current-page">Page {{ page }} of {{ total_pages }}</span>
+
+                {% if page < total_pages %}
+                <a href="{{ url_for('admin', page=page + 1) }}">Next &raquo;</a>
+                {% else %}
+                <span class="disabled">Next &raquo;</span>
+                {% endif %}
+            </nav>
+            {% endif %}
+
+        </section>
+
+
+        <!-- Category Management -->
+        <section>
+
+            <h2>Manage Categories</h2>
+
+            <div class="category-management">
+
+                {% for category in categories %}
+                <span>{{ category.name }}</span>
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- User Management -->
+        <section>
+
+            <h2>Manage Users</h2>
+
+            <p>
+                View registered students and manage user
+                accounts when required.
+            </p>
+
+            <div class="admin-resource-list">
+
+                {% for account in users %}
+                <article class="admin-resource">
+
+                    <div>
+                        <span class="resource-category">{{ account.role|capitalize }}</span>
+                        <h3>{{ account.name }}</h3>
+                        <p>{{ account.email }}</p>
+                    </div>
+
+                </article>
+                {% else %}
+                <p>No registered users yet.</p>
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- Logout -->
+        <div class="logout-area">
+
+            <a href="{{ url_for('logout') }}" class="logout-button">
+                Logout
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="brand-mark">🎓</div>
+                <div>
+                    <h3>Student Learning Hub</h3>
+                    <p>Learn, Share, Grow Together.</p>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
+                    <li><a href="{{ url_for('auth') }}">Categories</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li>Practical Programs</li>
+                    <li>Project Source Code</li>
+                    <li>Seminar PPTs</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-row">
+                    <span>f</span>
+                    <span>in</span>
+                    <span>x</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2025 Student Learning Hub. All rights reserved.</div>
+    </footer>
+
+</body>
+
+</html>

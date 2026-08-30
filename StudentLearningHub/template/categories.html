@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Categories - Student Learning Hub</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="topbar">
+        <div class="brand-wrap">
+            <div class="brand-mark">🎓</div>
+            <div class="brand-text">Student Learning Hub</div>
+        </div>
+
+        <nav class="main-nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('resources') }}">Resources</a>
+            <a href="{{ url_for('categories') }}">Categories</a>
+            {% if user %}
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+            {% endif %}
+        </nav>
+
+        <div class="nav-actions">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" placeholder="Search resources..." aria-label="Search resources">
+            </div>
+            {% if user %}
+            <a href="{{ url_for('upload') }}" class="button small-button">Upload</a>
+            {% else %}
+            <a href="{{ url_for('auth') }}" class="button small-button">Login</a>
+            {% endif %}
+        </div>
+    </header>
+
+    {% with flashed_messages = get_flashed_messages(with_categories=true) %}
+    {% if flashed_messages %}
+    <div class="flash-messages">
+        {% for category, message in flashed_messages %}
+        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Learning Categories</h1>
+            <p>
+                Explore our diverse collection of learning resources organized by category.
+            </p>
+        </div>
+    </section>
+
+    <main class="home-main">
+        <!-- All Categories -->
+        <section class="content-panel">
+            <h2>Browse All Categories</h2>
+
+            <div class="category-grid">
+                {% for category in categories_list %}
+                <article class="category-card">
+                    <div class="icon-box">📁</div>
+                    <h3>{{ category.name }}</h3>
+                    <p>{{ category.description }}</p>
+                    <div class="meta-row"><span>{{ category.resources|length }} Resources</span></div>
+                </article>
+                {% else %}
+                <p>No categories yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Category Information -->
+        <section class="content-panel">
+            <h2>How to Use Categories</h2>
+            <p>
+                Our platform organizes resources into categories to help you find exactly what you need:
+            </p>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li><strong>Practical Programs:</strong> Code examples and solutions for learning programming concepts.</li>
+                <li><strong>Project Source Code:</strong> Complete source code for mini-projects and academic assignments.</li>
+                <li><strong>Seminar PPTs:</strong> PowerPoint presentations and slides from seminars and lectures.</li>
+                <li><strong>Project Documents:</strong> Reports, documentation, and guides for academic projects.</li>
+                <li><strong>Interview Prep:</strong> Questions, answers, and tips for preparing for job interviews.</li>
+                <li><strong>Useful Links:</strong> Curated links to external resources and learning platforms.</li>
+            </ul>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-panel">
+            <h2>Can't Find What You're Looking For?</h2>
+            <p>Upload your own resources and help other students learn.</p>
+            <a href="{{ url_for('upload') }}" class="button">Upload a Resource</a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="brand-mark">🎓</div>
+                <div>
+                    <h3>Student Learning Hub</h3>
+                    <p>Learn, Share, Grow Together.</p>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
+                    <li><a href="{{ url_for('categories') }}">Categories</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li>Practical Programs</li>
+                    <li>Project Source Code</li>
+                    <li>Seminar PPTs</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-row">
+                    <span>f</span>
+                    <span>in</span>
+                    <span>x</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2025 Student Learning Hub. All rights reserved.</div>
+    </footer>
+
+</body>
+
+</html>

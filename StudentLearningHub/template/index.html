@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Learning Hub</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="topbar">
+        <div class="brand-wrap">
+            <div class="brand-mark">🎓</div>
+            <div class="brand-text">Student Learning Hub</div>
+        </div>
+
+        <nav class="main-nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('resources') }}">Resources</a>
+            <a href="{{ url_for('categories') }}">Categories</a>
+            {% if user %}
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+            {% endif %}
+        </nav>
+
+        <div class="nav-actions">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" placeholder="Search resources..." aria-label="Search resources">
+            </div>
+            {% if user %}
+            <a href="{{ url_for('upload') }}" class="button small-button">Upload</a>
+            {% else %}
+            <a href="{{ url_for('auth') }}" class="button small-button">Login</a>
+            {% endif %}
+        </div>
+    </header>
+
+    {% with flashed_messages = get_flashed_messages(with_categories=true) %}
+    {% if flashed_messages %}
+    <div class="flash-messages">
+        {% for category, message in flashed_messages %}
+        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Learn Together.<br><span>Share Knowledge.</span></h1>
+            <p>
+                A platform for students to upload, share, and access useful learning resources in one place.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="{{ url_for('resources') }}" class="button">Explore Resources</a>
+                <a href="{{ url_for('upload') }}" class="button secondary-button light">Upload Resource</a>
+            </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+            <div class="visual-background"></div>
+            <div class="book-stack">
+                <span class="book book-one"></span>
+                <span class="book book-two"></span>
+                <span class="book book-three"></span>
+            </div>
+            <div class="laptop-screen"></div>
+            <div class="graduation-cap"></div>
+            <div class="pencil"></div>
+            <div class="plant"></div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <main class="home-main">
+        <section class="content-panel">
+            <h2>Browse by Categories</h2>
+
+            <div class="category-grid">
+                <article class="category-card card-one">
+                    <div class="icon-box">&lt;/&gt;</div>
+                    <h3>Practical Programs</h3>
+                    <p>Programs and solutions for practical learning.</p>
+                    <div class="meta-row"><span>24 Resources</span></div>
+                </article>
+
+                <article class="category-card card-two">
+                    <div class="icon-box">&lt;/&gt;</div>
+                    <h3>Project Source Code</h3>
+                    <p>Mini projects and source code examples.</p>
+                    <div class="meta-row"><span>36 Resources</span></div>
+                </article>
+
+                <article class="category-card card-three">
+                    <div class="icon-box">📊</div>
+                    <h3>Seminar PPTs</h3>
+                    <p>Seminar presentations and lecture slides.</p>
+                    <div class="meta-row"><span>28 Resources</span></div>
+                </article>
+
+                <article class="category-card card-four">
+                    <div class="icon-box">📄</div>
+                    <h3>Project Documents</h3>
+                    <p>Reports and documentation for projects.</p>
+                    <div class="meta-row"><span>22 Resources</span></div>
+                </article>
+
+                <article class="category-card card-five">
+                    <div class="icon-box">💡</div>
+                    <h3>Interview Prep</h3>
+                    <p>Questions and materials for interview practice.</p>
+                    <div class="meta-row"><span>31 Resources</span></div>
+                </article>
+
+                <article class="category-card card-six">
+                    <div class="icon-box">🔗</div>
+                    <h3>Useful Links</h3>
+                    <p>Helpful learning links and references.</p>
+                    <div class="meta-row"><span>18 Resources</span></div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Latest Resources -->
+        <section class="content-panel">
+            <h2>Latest Resources</h2>
+
+            <div class="resource-table-wrap">
+                <table class="resource-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Uploaded By</th>
+                            <th>Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in latest_resources %}
+                        <tr>
+                            <td>{{ item.title }}</td>
+                            <td><span class="badge badge-blue">{{ item.category.name }}</span></td>
+                            <td>{{ item.user.name }}</td>
+                            <td>{{ item.created_at.strftime('%d %b %Y') }}</td>
+                            <td><a href="{{ url_for('resource', resource_id=item.id) }}" class="download-icon">⇩</a></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5">No resources have been uploaded yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="table-link-wrap">
+                    <a href="{{ url_for('resources') }}" class="button small-button">View All Resources</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-panel">
+            <h2>Have Something Useful to Share?</h2>
+            <p>Help other students by sharing your useful learning resources.</p>
+            <a href="{{ url_for('upload') }}" class="button">Upload a Resource</a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="brand-mark">🎓</div>
+                <div>
+                    <h3>Student Learning Hub</h3>
+                    <p>Learn, Share, Grow Together.</p>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
+                    <li><a href="{{ url_for('auth') }}">Categories</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li>Practical Programs</li>
+                    <li>Project Source Code</li>
+                    <li>Seminar PPTs</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-row">
+                    <span>f</span>
+                    <span>in</span>
+                    <span>x</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2025 Student Learning Hub. All rights reserved.</div>
+    </footer>
+
+</body>
+
+</html>

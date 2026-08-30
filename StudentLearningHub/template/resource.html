@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resource Details - Student Learning Hub</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="topbar">
+        <div class="brand-wrap">
+            <div class="brand-mark">🎓</div>
+            <div class="brand-text">Student Learning Hub</div>
+        </div>
+
+        <nav class="main-nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('resources') }}">Resources</a>
+            <a href="{{ url_for('categories') }}">Categories</a>
+            {% if user %}
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+            {% endif %}
+        </nav>
+
+        <div class="nav-actions">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" placeholder="Search resources..." aria-label="Search resources">
+            </div>
+            {% if user %}
+            <a href="{{ url_for('upload') }}" class="button small-button">Upload</a>
+            {% else %}
+            <a href="{{ url_for('auth') }}" class="button small-button">Login</a>
+            {% endif %}
+        </div>
+    </header>
+
+    {% with flashed_messages = get_flashed_messages(with_categories=true) %}
+    {% if flashed_messages %}
+    <div class="flash-messages">
+        {% for category, message in flashed_messages %}
+        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <main class="home-main">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+
+            <a href="{{ url_for('index') }}">Home</a>
+            <span>/</span>
+
+            <a href="{{ url_for('resources') }}">Resources</a>
+            <span>/</span>
+
+            <span>Resource Details</span>
+
+        </div>
+
+
+        <!-- Resource Details -->
+        <section class="resource-details">
+
+            <span class="resource-category">
+                {{ resource.category.name }}
+            </span>
+
+            <h1>{{ resource.title }}</h1>
+
+            <p class="resource-description">
+                {{ resource.description }}
+            </p>
+
+
+            <!-- Resource Information -->
+            <div class="resource-meta">
+
+                <div>
+                    <strong>Uploaded By</strong>
+                    <p>{{ resource.user.name }}</p>
+                </div>
+
+                <div>
+                    <strong>Upload Date</strong>
+                    <p>{{ resource.created_at.strftime('%d %B %Y') }}</p>
+                </div>
+
+                <div>
+                    <strong>File Type</strong>
+                    <p>{{ resource.file_name.rsplit('.', 1)[-1].upper() }}</p>
+                </div>
+
+                <div>
+                    <strong>File Name</strong>
+                    <p>{{ resource.file_name }}</p>
+                </div>
+
+            </div>
+
+
+            <!-- Download -->
+            <div class="download-box">
+
+                <h2>Ready to Download?</h2>
+
+                <p>
+                    Download this resource and use it for
+                    your learning and practice.
+                </p>
+
+                <a href="{{ url_for('download_resource', resource_id=resource.id) }}" class="button">
+                    Download Resource
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- Report -->
+        <section class="report-section">
+
+            <h2>Found a Problem?</h2>
+
+            <p>
+                If this resource is duplicate, inappropriate,
+                or irrelevant, you can report it to the admin.
+            </p>
+
+            <button type="button" class="report-button">
+                Report Resource
+            </button>
+
+        </section>
+
+
+        <!-- Back -->
+        <div class="back-link">
+
+            <a href="{{ url_for('resources') }}">
+                ← Back to Resources
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="brand-mark">🎓</div>
+                <div>
+                    <h3>Student Learning Hub</h3>
+                    <p>Learn, Share, Grow Together.</p>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
+                    <li><a href="{{ url_for('auth') }}">Categories</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li>Practical Programs</li>
+                    <li>Project Source Code</li>
+                    <li>Seminar PPTs</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-row">
+                    <span>f</span>
+                    <span>in</span>
+                    <span>x</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2025 Student Learning Hub. All rights reserved.</div>
+    </footer>
+
+</body>
+
+</html>

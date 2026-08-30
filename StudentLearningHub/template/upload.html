@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Upload Resource - Student Learning Hub</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="topbar">
+        <div class="brand-wrap">
+            <div class="brand-mark">🎓</div>
+            <div class="brand-text">Student Learning Hub</div>
+        </div>
+
+        <nav class="main-nav">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('resources') }}">Resources</a>
+            <a href="{{ url_for('categories') }}">Categories</a>
+            {% if user %}
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+            {% endif %}
+        </nav>
+
+        <div class="nav-actions">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" placeholder="Search resources..." aria-label="Search resources">
+            </div>
+            {% if user %}
+            <a href="{{ url_for('upload') }}" class="button small-button">Upload</a>
+            {% else %}
+            <a href="{{ url_for('auth') }}" class="button small-button">Login</a>
+            {% endif %}
+        </div>
+    </header>
+
+    {% with flashed_messages = get_flashed_messages(with_categories=true) %}
+    {% if flashed_messages %}
+    <div class="flash-messages">
+        {% for category, message in flashed_messages %}
+        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+
+    <main class="content-shell">
+
+        <!-- Page Heading -->
+        <section class="page-heading">
+
+            <h1>Share a Learning Resource</h1>
+
+            <p>
+                Share useful learning materials with other students.
+            </p>
+
+        </section>
+
+
+        <!-- Upload Form -->
+        <section class="upload-container">
+
+            <form class="upload-form" method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+
+                <!-- Title -->
+                <div class="form-group">
+
+                    <label for="title">
+                        Resource Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        placeholder="e.g. Python Practical Programs"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Category -->
+                <div class="form-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category"
+                        required
+                    >
+
+                        <option value="">
+                            Select a category
+                        </option>
+
+                        <option value="practical">
+                            Practical Programs
+                        </option>
+
+                        <option value="project">
+                            Project Source Code
+                        </option>
+
+                        <option value="seminar">
+                            Seminar PPTs
+                        </option>
+
+                        <option value="documentation">
+                            Project Documentation
+                        </option>
+
+                        <option value="coding">
+                            Coding Practice
+                        </option>
+
+                        <option value="interview">
+                            Interview Preparation
+                        </option>
+
+                        <option value="resume">
+                            Resume Templates
+                        </option>
+
+                        <option value="links">
+                            Useful Learning Links
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Subject -->
+                <div class="form-group">
+
+                    <label for="subject">
+                        Subject
+                    </label>
+
+                    <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        placeholder="e.g. Python"
+                    >
+
+                </div>
+
+
+                <!-- Description -->
+                <div class="form-group">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="5"
+                        placeholder="Briefly describe this resource..."
+                    ></textarea>
+
+                </div>
+
+
+                <!-- File -->
+                <div class="form-group">
+
+                    <label for="resource_file">
+                        Select Resource File
+                    </label>
+
+                    <div class="file-upload">
+
+                        <input
+                            type="file"
+                            id="resource_file"
+                            name="resource_file"
+                            required
+                        >
+
+                        <p>
+                            PDF, PPT, DOC, ZIP and other
+                            learning-related files
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="upload-buttons">
+
+                    <button type="submit">
+                        Upload Resource
+                    </button>
+
+                    <button
+                        type="reset"
+                        class="clear-button"
+                    >
+                        Clear
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- Guidelines -->
+        <section class="upload-guidelines">
+
+            <h2>Before You Upload</h2>
+
+            <ul>
+
+                <li>
+                    Upload only useful learning resources.
+                </li>
+
+                <li>
+                    Avoid uploading duplicate files.
+                </li>
+
+                <li>
+                    Use a clear and meaningful title.
+                </li>
+
+                <li>
+                    Make sure the file is readable and relevant.
+                </li>
+
+                <li>
+                    Do not upload inappropriate content.
+                </li>
+
+            </ul>
+
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="brand-mark">🎓</div>
+                <div>
+                    <h3>Student Learning Hub</h3>
+                    <p>Learn, Share, Grow Together.</p>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
+                    <li><a href="{{ url_for('auth') }}">Categories</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li>Practical Programs</li>
+                    <li>Project Source Code</li>
+                    <li>Seminar PPTs</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-row">
+                    <span>f</span>
+                    <span>in</span>
+                    <span>x</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2025 Student Learning Hub. All rights reserved.</div>
+    </footer>
+
+</body>
+
+</html>
