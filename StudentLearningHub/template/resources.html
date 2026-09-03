@@ -1,150 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Resources — Student Learning Hub{% endblock %}
 
-    <title>Resources - Student Learning Hub</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-
-<body>
-
-    <!-- Navigation Bar -->
-    <header class="topbar">
-        <div class="brand-wrap">
-            <div class="brand-mark">🎓</div>
-            <div class="brand-text">Student Learning Hub</div>
-        </div>
-
-        <nav class="main-nav">
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('resources') }}">Resources</a>
-            <a href="{{ url_for('categories') }}">Categories</a>
-            {% if user %}
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-            <a href="{{ url_for('about') }}">About Us</a>
-            <a href="{{ url_for('contact') }}">Contact</a>
-            {% endif %}
-        </nav>
-
-        <div class="nav-actions">
-            <div class="search-box">
-                <span>🔍</span>
-                <input type="text" placeholder="Search resources..." aria-label="Search resources">
-            </div>
-            {% if user %}
-            <a href="{{ url_for('upload') }}" class="button small-button">Upload</a>
-            {% else %}
-            <a href="{{ url_for('auth') }}" class="button small-button">Login</a>
-            {% endif %}
-        </div>
-    </header>
-
-    {% with flashed_messages = get_flashed_messages(with_categories=true) %}
-    {% if flashed_messages %}
-    <div class="flash-messages">
-        {% for category, message in flashed_messages %}
-        <div class="flash-message flash-{{ category }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-
-
+{% block content %}
     <main class="content-shell">
 
         <!-- Page Heading -->
-        <section class="page-heading">
-
+        <section class="page-heading animate-fade-up">
             <h1>Learning Resources</h1>
-
-            <p>
-                Explore useful resources shared by students.
-            </p>
-
+            <p>Explore useful resources shared by students.</p>
         </section>
 
-
         <!-- Search and Filter -->
-        <section class="search-section">
-
+        <section class="search-section animate-fade-up">
             <form class="search-form" method="get" action="{{ url_for('resources') }}">
-
-                <input
-                    type="search"
-                    name="search"
-                    placeholder="Search for resources..."
-                    value="{{ search_query }}"
-                >
-
+                <input type="search" name="search" placeholder="Search for resources..." value="{{ search_query }}">
                 <select name="category">
-
-                    <option value="" {% if not selected_category %}selected{% endif %}>
-                        All Categories
-                    </option>
-
+                    <option value="" {% if not selected_category %}selected{% endif %}>All Categories</option>
                     {% for category in categories_list %}
                     <option value="{{ category.key }}" {% if selected_category == category.key %}selected{% endif %}>
                         {{ category.name }}
                     </option>
                     {% endfor %}
-
                 </select>
-
-                <button type="submit">
-                    Search
-                </button>
-
+                <button type="submit">Search</button>
             </form>
-
         </section>
 
-
         <!-- Resources -->
-        <section>
-
+        <section class="animate-fade-up">
             <div class="section-heading">
-
                 <h2>Available Resources</h2>
-
-                <p>
-                    Browse the latest learning materials.
-                </p>
-
+                <p>Browse the latest learning materials.</p>
             </div>
 
-
             <div class="resource-grid">
-
                 {% for item in resources_list %}
-                <article class="resource-card">
-
-                    <span class="resource-category">
-                        {{ item.category.name }}
-                    </span>
-
+                <article class="resource-card glass-panel">
+                    <span class="resource-category">{{ item.category.name }}</span>
                     <h3>{{ item.title }}</h3>
-
-                    <p>
-                        {{ item.description }}
-                    </p>
-
-                    <p class="resource-info">
-                        Uploaded by: {{ item.user.name }}
-                    </p>
-
-                    <a href="{{ url_for('resource', resource_id=item.id) }}" class="button">
-                        View Details
-                    </a>
-
+                    <p>{{ item.description }}</p>
+                    <p class="resource-info">Uploaded by: {{ item.user.name }}</p>
+                    <a href="{{ url_for('resource', resource_id=item.id) }}" class="button">View Details</a>
                 </article>
                 {% else %}
-                <p>
+                <p class="empty-state">
                     {% if search_query or selected_category %}
                     No resources match your search or filter.
                     {% else %}
@@ -152,7 +52,6 @@
                     {% endif %}
                 </p>
                 {% endfor %}
-
             </div>
 
             {% if total_pages > 1 %}
@@ -173,51 +72,7 @@
                 {% endif %}
             </nav>
             {% endif %}
-
         </section>
 
     </main>
-
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-brand">
-                <div class="brand-mark">🎓</div>
-                <div>
-                    <h3>Student Learning Hub</h3>
-                    <p>Learn, Share, Grow Together.</p>
-                </div>
-            </div>
-
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
-                    <li><a href="{{ url_for('auth') }}">Categories</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Categories</h4>
-                <ul>
-                    <li>Practical Programs</li>
-                    <li>Project Source Code</li>
-                    <li>Seminar PPTs</li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Follow Us</h4>
-                <div class="social-row">
-                    <span>f</span>
-                    <span>in</span>
-                    <span>x</span>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">© 2025 Student Learning Hub. All rights reserved.</div>
-    </footer>
-
-</body>
-
-</html>
+{% endblock %}

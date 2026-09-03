@@ -1,294 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Dashboard — Student Learning Hub{% endblock %}
 
-    <title>Dashboard - Student Learning Hub</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-
-<body>
-
-    <!-- Navigation Bar -->
-    <header class="topbar">
-        <div class="brand-wrap">
-            <div class="brand-mark">🎓</div>
-            <div class="brand-text">Student Learning Hub</div>
-        </div>
-
-        <nav class="main-nav">
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('resources') }}">Resources</a>
-            <a href="{{ url_for('categories') }}">Categories</a>
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-        </nav>
-
-        <div class="nav-actions">
-            <div class="search-box">
-                <span>🔍</span>
-                <input type="text" placeholder="Search resources..." aria-label="Search resources">
-            </div>
-            <a href="{{ url_for('upload') }}" class="button small-button">Upload</a>
-        </div>
-    </header>
-
-    {% with flashed_messages = get_flashed_messages(with_categories=true) %}
-    {% if flashed_messages %}
-    <div class="flash-messages">
-        {% for category, message in flashed_messages %}
-        <div class="flash-message flash-{{ category }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-
-
+{% block content %}
     <main class="content-shell">
 
         <!-- Welcome -->
-        <section class="dashboard-welcome">
-
+        <section class="dashboard-welcome glass-panel animate-fade-up">
             <div>
-
-                <p>
-                    Student Dashboard
-                </p>
-
+                <p class="small-text">Student Dashboard</p>
                 <h1>Welcome, {{ user.name }}!</h1>
-
-                <p>
-                    Manage your profile and the resources
-                    you have shared.
-                </p>
-
+                <p>Manage your profile and the resources you have shared.</p>
             </div>
-
-            <a href="{{ url_for('upload') }}" class="button">
-                + Upload Resource
-            </a>
-
+            <a href="{{ url_for('upload') }}" class="button">+ Upload Resource</a>
         </section>
-
 
         <!-- Profile and Statistics -->
         <div class="dashboard-grid">
 
             <!-- Profile -->
-            <section class="profile-card">
-
+            <section class="profile-card glass-panel animate-fade-up">
                 <h2>My Profile</h2>
 
                 <div class="profile-info">
-
                     <p>
                         <strong>Name</strong>
                         <span>{{ user.name }}</span>
                     </p>
-
                     <p>
                         <strong>Email</strong>
                         <span>{{ user.email }}</span>
                     </p>
-
                     <p>
                         <strong>Role</strong>
                         <span>{{ user.role|capitalize }}</span>
                     </p>
-
                 </div>
 
+                <!-- Edit Profile -->
                 <details class="change-password">
-                    <summary>Change Password</summary>
+                    <summary>✏️ Edit Profile</summary>
+                    <form method="post" action="{{ url_for('edit_profile') }}" class="password-form">
+                        {{ profile_form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ profile_form.name.label }}
+                            {{ profile_form.name(value=user.name) }}
+                        </div>
+                        <div class="form-group">
+                            {{ profile_form.email.label }}
+                            {{ profile_form.email(value=user.email) }}
+                        </div>
+                        {{ profile_form.submit(class_="button") }}
+                    </form>
+                </details>
 
+                <!-- Change Password -->
+                <details class="change-password">
+                    <summary>🔒 Change Password</summary>
                     <form method="post" action="{{ url_for('change_password') }}" class="password-form">
                         {{ password_form.hidden_tag() }}
-
                         <div class="form-group">
                             {{ password_form.current_password.label }}
                             {{ password_form.current_password() }}
                         </div>
-
                         <div class="form-group">
                             {{ password_form.new_password.label }}
                             {{ password_form.new_password() }}
                         </div>
-
                         <div class="form-group">
                             {{ password_form.confirm_new_password.label }}
                             {{ password_form.confirm_new_password() }}
                         </div>
-
                         {{ password_form.submit(class_="button") }}
                     </form>
                 </details>
-
             </section>
 
-
             <!-- Statistics -->
-            <section class="stats-card">
-
+            <section class="stats-card glass-panel animate-fade-up">
                 <h2>My Activity</h2>
-
                 <div class="stat-box">
-
                     <div>
                         <strong>{{ user_resources|length }}</strong>
                         <span>Resources Uploaded</span>
                     </div>
-
                     <div>
                         <strong>{{ user.created_at.strftime('%b %Y') }}</strong>
                         <span>Member Since</span>
                     </div>
-
                 </div>
-
             </section>
 
         </div>
 
-
         <!-- Quick Actions -->
-        <section>
-
+        <section class="animate-fade-up">
             <h2>Quick Actions</h2>
-
             <div class="quick-actions">
-
-                <a href="{{ url_for('upload') }}" class="action-card">
-                    <h3>Upload Resource</h3>
-                    <p>
-                        Share a useful resource with other students.
-                    </p>
+                <a href="{{ url_for('upload') }}" class="action-card glass-panel">
+                    <h3>📤 Upload Resource</h3>
+                    <p>Share a useful resource with other students.</p>
                 </a>
-
-                <a href="{{ url_for('resources') }}" class="action-card">
-                    <h3>Browse Resources</h3>
-                    <p>
-                        Find and download useful learning materials.
-                    </p>
+                <a href="{{ url_for('resources') }}" class="action-card glass-panel">
+                    <h3>📚 Browse Resources</h3>
+                    <p>Find and download useful learning materials.</p>
                 </a>
-
             </div>
-
         </section>
 
-
         <!-- Uploaded Resources -->
-        <section>
-
+        <section class="animate-fade-up">
             <div class="section-heading">
-
                 <h2>My Uploaded Resources</h2>
-
-                <p>
-                    Resources you have shared with other students.
-                </p>
-
+                <p>Resources you have shared with other students.</p>
             </div>
 
-
             <div class="my-resources">
-
                 {% for item in user_resources %}
-                <article class="my-resource-card">
-
+                <article class="my-resource-card glass-panel">
                     <div>
-
-                        <span class="resource-category">
-                            {{ item.category.name }}
-                        </span>
-
+                        <span class="resource-category">{{ item.category.name }}</span>
                         <h3>{{ item.title }}</h3>
-
-                        <p>
-                            Uploaded on: {{ item.created_at.strftime('%d %B %Y') }}
-                        </p>
-
+                        <p>Uploaded on: {{ item.created_at.strftime('%d %B %Y') }}</p>
                     </div>
-
                     <div class="resource-actions">
-
-                        <a href="{{ url_for('resource', resource_id=item.id) }}" class="button">
-                            View
-                        </a>
-
+                        <a href="{{ url_for('resource', resource_id=item.id) }}" class="button">View</a>
                         <form method="post" action="{{ url_for('delete_resource', resource_id=item.id) }}"
                               onsubmit="return confirm('Delete this resource?');" style="display:inline;">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <button type="submit" class="delete-button">
-                                Delete
-                            </button>
+                            <button type="submit" class="delete-button">Delete</button>
                         </form>
-
                     </div>
-
                 </article>
                 {% else %}
-                <p>You haven't uploaded any resources yet.</p>
+                <p class="empty-state">You haven't uploaded any resources yet. <a href="{{ url_for('upload') }}">Upload your first resource →</a></p>
                 {% endfor %}
-
             </div>
-
         </section>
-
 
         <!-- Logout -->
         <div class="logout-area">
-
-            <a href="{{ url_for('logout') }}" class="logout-button">
-                Logout
-            </a>
-
+            <a href="{{ url_for('logout') }}" class="button logout-button">Logout</a>
         </div>
 
     </main>
-
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-brand">
-                <div class="brand-mark">🎓</div>
-                <div>
-                    <h3>Student Learning Hub</h3>
-                    <p>Learn, Share, Grow Together.</p>
-                </div>
-            </div>
-
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
-                    <li><a href="{{ url_for('auth') }}">Categories</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Categories</h4>
-                <ul>
-                    <li>Practical Programs</li>
-                    <li>Project Source Code</li>
-                    <li>Seminar PPTs</li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Follow Us</h4>
-                <div class="social-row">
-                    <span>f</span>
-                    <span>in</span>
-                    <span>x</span>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">© 2025 Student Learning Hub. All rights reserved.</div>
-    </footer>
-
-</body>
-
-</html>
+{% endblock %}

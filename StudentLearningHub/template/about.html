@@ -1,122 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}About Us — Student Learning Hub{% endblock %}
 
-    <title>About Us - Student Learning Hub</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-
-<body>
-
-    <!-- Navigation Bar -->
-    <header class="topbar">
-        <div class="brand-wrap">
-            <div class="brand-mark">🎓</div>
-            <div class="brand-text">Student Learning Hub</div>
-        </div>
-
-        <nav class="main-nav">
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('resources') }}">Resources</a>
-            <a href="{{ url_for('categories') }}">Categories</a>
-            {% if user %}
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-            <a href="{{ url_for('about') }}">About Us</a>
-            <a href="{{ url_for('contact') }}">Contact</a>
-            {% endif %}
-        </nav>
-
-        <div class="nav-actions">
-            <div class="search-box">
-                <span>🔍</span>
-                <input type="text" placeholder="Search resources..." aria-label="Search resources">
-            </div>
-            {% if user %}
-            <a href="{{ url_for('upload') }}" class="button small-button">Upload</a>
-            {% else %}
-            <a href="{{ url_for('auth') }}" class="button small-button">Login</a>
-            {% endif %}
-        </div>
-    </header>
-
-    {% with flashed_messages = get_flashed_messages(with_categories=true) %}
-    {% if flashed_messages %}
-    <div class="flash-messages">
-        {% for category, message in flashed_messages %}
-        <div class="flash-message flash-{{ category }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-
+{% block content %}
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-content">
+        <div class="hero-content animate-fade-up">
             <h1>About Us</h1>
-            <p>
-                Discover the story behind Student Learning Hub and our mission to empower learners.
-            </p>
+            <p>Discover the story behind Student Learning Hub and our mission to empower learners.</p>
         </div>
     </section>
 
     <main class="home-main">
         <!-- Our Mission -->
-        <section class="content-panel">
-            <h2>Our Mission</h2>
+        <section class="content-panel glass-panel animate-fade-up">
+            <h2>🎯 Our Mission</h2>
             <p>
                 At Student Learning Hub, we believe that knowledge should be accessible to everyone. Our mission is to create a vibrant community where students can share, learn, and grow together. We're committed to providing a platform that makes it easy for students to upload, discover, and benefit from educational resources.
             </p>
         </section>
 
         <!-- Our Vision -->
-        <section class="content-panel">
-            <h2>Our Vision</h2>
+        <section class="content-panel glass-panel animate-fade-up">
+            <h2>🔮 Our Vision</h2>
             <p>
                 We envision a world where every student has access to high-quality learning materials and can collaborate with peers to enhance their educational journey. Through our platform, we aim to democratize education and foster a culture of continuous learning.
             </p>
         </section>
 
         <!-- Why Choose Us -->
-        <section class="content-panel">
+        <section class="content-panel glass-panel animate-fade-up">
             <h2>Why Choose Us?</h2>
             <div class="category-grid">
-                <article class="category-card">
+                <article class="category-card cat-cyan">
                     <div class="icon-box">📚</div>
                     <h3>Rich Repository</h3>
                     <p>Access thousands of resources shared by students across various categories.</p>
                 </article>
 
-                <article class="category-card">
+                <article class="category-card cat-blue">
                     <div class="icon-box">🤝</div>
                     <h3>Community Driven</h3>
                     <p>Built by students, for students. Share your knowledge and help others learn.</p>
                 </article>
 
-                <article class="category-card">
+                <article class="category-card cat-purple">
                     <div class="icon-box">⚡</div>
                     <h3>Easy to Use</h3>
                     <p>Simple and intuitive interface designed for seamless resource sharing.</p>
                 </article>
 
-                <article class="category-card">
+                <article class="category-card cat-green">
                     <div class="icon-box">🔒</div>
                     <h3>Secure & Private</h3>
                     <p>Your data is safe with us. We prioritize privacy and security.</p>
                 </article>
 
-                <article class="category-card">
+                <article class="category-card cat-orange">
                     <div class="icon-box">🌍</div>
                     <h3>Global Reach</h3>
                     <p>Connect with students from around the world and expand your learning network.</p>
                 </article>
 
-                <article class="category-card">
+                <article class="category-card cat-pink">
                     <div class="icon-box">🚀</div>
                     <h3>Always Growing</h3>
                     <p>We continuously update and improve our platform based on user feedback.</p>
@@ -125,61 +71,18 @@
         </section>
 
         <!-- Our Team -->
-        <section class="content-panel">
-            <h2>Our Team</h2>
+        <section class="content-panel glass-panel animate-fade-up">
+            <h2>👥 Our Team</h2>
             <p>
                 Student Learning Hub is maintained by a dedicated team of developers and educators passionate about making education accessible. We work tirelessly to ensure that our platform serves the needs of students worldwide.
             </p>
         </section>
 
         <!-- Call to Action -->
-        <section class="cta-panel">
+        <section class="cta-panel animate-fade-up">
             <h2>Ready to Get Started?</h2>
             <p>Join thousands of students sharing and learning together.</p>
             <a href="{{ url_for('upload') }}" class="button">Share a Resource</a>
         </section>
     </main>
-
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-brand">
-                <div class="brand-mark">🎓</div>
-                <div>
-                    <h3>Student Learning Hub</h3>
-                    <p>Learn, Share, Grow Together.</p>
-                </div>
-            </div>
-
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
-                    <li><a href="{{ url_for('categories') }}">Categories</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Categories</h4>
-                <ul>
-                    <li>Practical Programs</li>
-                    <li>Project Source Code</li>
-                    <li>Seminar PPTs</li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Follow Us</h4>
-                <div class="social-row">
-                    <span>f</span>
-                    <span>in</span>
-                    <span>x</span>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">© 2025 Student Learning Hub. All rights reserved.</div>
-    </footer>
-
-</body>
-
-</html>
+{% endblock %}

@@ -18,6 +18,30 @@ CATEGORY_SEED = [
     ("links", "Useful Learning Links"),
 ]
 
+# Emoji icons for each category key (used in templates).
+CATEGORY_ICONS = {
+    "practical": "💻",
+    "project": "🚀",
+    "seminar": "📊",
+    "documentation": "📄",
+    "coding": "⌨️",
+    "interview": "💡",
+    "resume": "📝",
+    "links": "🔗",
+}
+
+# Gradient CSS classes per category (used in templates).
+CATEGORY_COLORS = {
+    "practical": "cat-cyan",
+    "project": "cat-blue",
+    "seminar": "cat-purple",
+    "documentation": "cat-green",
+    "coding": "cat-orange",
+    "interview": "cat-pink",
+    "resume": "cat-yellow",
+    "links": "cat-teal",
+}
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -28,6 +52,10 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(20), default="student")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Password-reset token (simulated — shown on-screen rather than emailed).
+    reset_token = db.Column(db.String(100), nullable=True)
+    reset_token_expires = db.Column(db.DateTime, nullable=True)
 
     resources = db.relationship("Resource", back_populates="user", lazy=True)
 

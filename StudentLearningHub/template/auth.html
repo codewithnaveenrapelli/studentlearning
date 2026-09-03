@@ -1,255 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Login / Register — Student Learning Hub{% endblock %}
 
-    <title>Login / Register - Student Learning Hub</title>
+{% block head_extra %}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-</head>
-
-<body>
-
-    <!-- Navigation Bar -->
-    <header class="topbar">
-        <div class="brand-wrap">
-            <div class="brand-mark">🎓</div>
-            <div class="brand-text">Student Learning Hub</div>
-        </div>
-
-        <nav class="main-nav">
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('resources') }}">Resources</a>
-            <a href="{{ url_for('categories') }}">Categories</a>
-            <a href="{{ url_for('about') }}">About Us</a>
-            <a href="{{ url_for('contact') }}">Contact</a>
-        </nav>
-
-        <div class="nav-actions">
-            <div class="search-box">
-                <span>🔍</span>
-                <input type="text" placeholder="Search resources..." aria-label="Search resources">
-            </div>
-            <a href="{{ url_for('auth') }}" class="button small-button">Login</a>
-        </div>
-    </header>
-
-    {% with flashed_messages = get_flashed_messages(with_categories=true) %}
-    {% if flashed_messages %}
-    <div class="flash-messages">
-        {% for category, message in flashed_messages %}
-        <div class="flash-message flash-{{ category }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-
-
+{% block content %}
     <!-- Authentication -->
-    <main class="auth-container">
+    <main class="auth-container animate-fade-up">
 
         <div class="auth-header">
-
             <h1>Welcome to Student Learning Hub</h1>
-
-            <p>
-                Login to your account or create a new one.
-            </p>
-
+            <p>Login to your account or create a new one.</p>
         </div>
 
-
-     <div class="auth-tabs">
-
-    <button
-        type="button"
-        id="login-tab"
-        class="tab-button active"
-        onclick="showLogin()"
-    >
-        Login
-    </button>
-
-    <button
-        type="button"
-        id="register-tab"
-        class="tab-button"
-        onclick="showRegister()"
-    >
-        Register
-    </button>
-
-</div>
-
+        <div class="auth-tabs">
+            <button type="button" id="login-tab" class="tab-button active" onclick="showLogin()">Login</button>
+            <button type="button" id="register-tab" class="tab-button" onclick="showRegister()">Register</button>
+        </div>
 
         <!-- Login Form -->
-       <section class="auth-box" id="login-box">
-
+        <section class="auth-box glass-panel" id="login-box">
             <h2>Login to Your Account</h2>
 
             <form method="post" action="{{ url_for('auth') }}" onsubmit="return validateLogin()">
                 {{ login_form.hidden_tag() }}
-                <label for="login-email">
-                    Email / Username
-                </label>
 
-                <input
-                    type="text"
-                    id="login-email"
-                    name="email"
-                    placeholder="Enter your email or username"
-                    required
-                >
+                <label for="login-email">Email / Username</label>
+                <input type="text" id="login-email" name="email" placeholder="Enter your email or username" required>
 
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
 
-                <label for="login-password">
-                    Password
-                </label>
+                <button type="submit" name="login_submit" class="full-button">Login</button>
 
-                <input
-                    type="password"
-                    id="login-password"
-                    name="password"
-                    placeholder="Enter your password"
-                    required
-                >
-
-
-                <div class="remember">
-
-                    <input
-                        type="checkbox"
-                        id="remember"
-                    >
-
-                    <label for="remember">
-                        Remember me
-                    </label>
-
-                </div>
-
-
-                <button type="submit" name="login_submit" class="full-button">
-                    Login
-                </button>
-
+                <p style="text-align:center; margin-top: 12px;">
+                    <a href="{{ url_for('forgot_password') }}" style="color:#2563eb; font-weight:600;">Forgot Password?</a>
+                </p>
             </form>
-
         </section>
 
-
         <!-- Registration Form -->
-      <section class="auth-box" id="register-box">
-
+        <section class="auth-box glass-panel" id="register-box">
             <h2>Create Your Account</h2>
 
-          <form method="post" action="{{ url_for('auth') }}" onsubmit="return validateRegistration()">
+            <form method="post" action="{{ url_for('auth') }}" onsubmit="return validateRegistration()">
                 {{ register_form.hidden_tag() }}
-                <label for="name">
-                    Full Name
-                </label>
 
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Enter your full name"
-                    required
-                >
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
 
+                <label for="register-email">Email</label>
+                <input type="email" id="register-email" name="email" placeholder="Enter your email" required>
 
-                <label for="register-email">
-                    Email
-                </label>
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" name="password" placeholder="Create a password" required>
 
-                <input
-                    type="email"
-                    id="register-email"
-                    name="email"
-                    placeholder="Enter your email"
-                    required
-                >
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirm your password" required>
 
-
-                <label for="register-password">
-                    Password
-                </label>
-
-                <input
-                    type="password"
-                    id="register-password"
-                    name="password"
-                    placeholder="Create a password"
-                    required
-                >
-
-
-                <label for="confirm-password">
-                    Confirm Password
-                </label>
-
-                <input
-                    type="password"
-                    id="confirm-password"
-                    name="confirm_password"
-                    placeholder="Confirm your password"
-                    required
-                >
-
-
-                <button type="submit" name="register_submit" class="full-button">
-                    Create Account
-                </button>
-
+                <button type="submit" name="register_submit" class="full-button">Create Account</button>
             </form>
-
         </section>
 
     </main>
-
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-brand">
-                <div class="brand-mark">🎓</div>
-                <div>
-                    <h3>Student Learning Hub</h3>
-                    <p>Learn, Share, Grow Together.</p>
-                </div>
-            </div>
-
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
-                    <li><a href="{{ url_for('auth') }}">Categories</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Categories</h4>
-                <ul>
-                    <li>Practical Programs</li>
-                    <li>Project Source Code</li>
-                    <li>Seminar PPTs</li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Follow Us</h4>
-                <div class="social-row">
-                    <span>f</span>
-                    <span>in</span>
-                    <span>x</span>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">© 2025 Student Learning Hub. All rights reserved.</div>
-    </footer>
-
-</body>
-
-</html>
+{% endblock %}
